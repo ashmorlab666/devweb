@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projects - John Doe</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            color: #fff;
+            background: #0a192f;
+            overflow-x: hidden;
+            line-height: 1.6;
+        }
+        
+        #particles-js {
+            position: fixed;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: -1;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header & Navigation */
+        header {
+            padding: 30px 0;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            transition: background 0.3s ease;
+        }
+        
+        header.scrolled {
+            background: rgba(10, 25, 47, 0.95);
+            box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 28px;
+            font-weight: 700;
+            color: #64ffda;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li {
+            margin-left: 40px;
+        }
+        
+        .nav-links a {
+            color: #ccd6f6;
+            text-decoration: none;
+            font-size: 16px;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-links a:hover {
+            color: #64ffda;
+        }
+        
+        /* Hero Section */
+        .page-hero {
+            min-height: 60vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 150px 0 50px;
+            text-align: center;
+        }
+        
+        .page-hero h1 {
+            font-size: 60px;
+            margin-bottom: 20px;
+            color: #e6f1ff;
+        }
+        
+        .page-hero p {
+            font-size: 20px;
+            color: #8892b0;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        /* Project Tabs */
+        .project-tabs {
+            display: flex;
+            justify-content: center;
+            margin: 40px 0;
+            gap: 20px;
+        }
+        
+        .tab-btn {
+            padding: 15px 30px;
+            background: transparent;
+            color: #ccd6f6;
+            border: 1px solid #64ffda;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .tab-btn.active {
+            background: rgba(100, 255, 218, 0.1);
+            color: #64ffda;
+        }
+        
+        .tab-btn:hover:not(.active) {
+            background: rgba(100, 255, 218, 0.05);
+        }
+        
+        /* Projects Grid */
+        .projects-container {
+            display: none;
+            padding: 40px 0 100px;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        .projects-container.active {
+            display: block;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+        }
+        
+        .project-card {
+            background: #112240;
+            border-radius: 10px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            position: relative;
+            height: 400px;
+            perspective: 1000px;
+        }
+        
+        .project-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transition: transform 0.8s;
+            transform-style: preserve-3d;
+        }
+        
+        .project-card:hover .project-card-inner {
+            transform: rotateY(180deg);
+        }
+        
+        .project-card-front, .project-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .project-card-back {
+            transform: rotateY(180deg);
+            padding: 25px;
+            background: #0a192f;
+            justify-content: center;
+        }
+        
+        .project-img {
+            height: 200px;
+            background: #64ffda;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #0a192f;
+            font-size: 24px;
+            font-weight: 700;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .project-img::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, rgba(100, 255, 218, 0.4) 0%, rgba(100, 255, 218, 0.1) 100%);
+        }
+        
+        .project-content {
+            padding: 25px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .project-title {
+            font-size: 22px;
+            color: #e6f1ff;
+            margin-bottom: 15px;
+        }
+        
+        .project-desc {
+            color: #8892b0;
+            margin-bottom: 20px;
+            flex-grow: 1;
+        }
+        
+        .project-tech {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        .project-tech span {
+            font-size: 12px;
+            color: #64ffda;
+            background: rgba(100, 255, 218, 0.1);
+            padding: 5px 10px;
+            border-radius: 15px;
+        }
+        
+        .project-links {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .project-links a {
+            color: #e6f1ff;
+            font-size: 20px;
+            transition: color 0.3s ease;
+        }
+        
+        .project-links a:hover {
+            color: #64ffda;
+        }
+        
+        .progress-bar {
+            height: 6px;
+            background: #1d3b61;
+            border-radius: 3px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: #64ffda;
+            border-radius: 3px;
+            width: 0;
+            transition: width 1.5s ease-in-out;
+        }
+        
+        .progress-text {
+            text-align: center;
+            color: #64ffda;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+        
+        .status-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            padding: 5px 15px;
+            border-radius: 15px;
+            font-size: 12px;
+            font-weight: 600;
+            z-index: 10;
+        }
+        
+        .status-complete {
+            background: rgba(100, 255, 218, 0.1);
+            color: #64ffda;
+        }
+        
+        .status-ongoing {
+            background: rgba(255, 107, 107, 0.1);
+            color: #ff6b6b;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(255, 107, 107, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(255, 107, 107, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(255, 107, 107, 0); }
+        }
+        
+        /* Back side content */
+        .project-details {
+            color: #8892b0;
+            margin-bottom: 25px;
+            line-height: 1.6;
+        }
+        
+        .feature-list {
+            list-style: none;
+            margin-bottom: 25px;
+        }
+        
+        .feature-list li {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .feature-list li:before {
+            content: "▹";
+            color: #64ffda;
+            margin-right: 10px;
+        }
+        
+        /* Footer */
+        footer {
+            background: #020c1b;
+            padding: 30px 0;
+            text-align: center;
+        }
+        
+        .social-links {
+            margin-bottom: 20px;
+        }
+        
+        .social-links a {
+            color: #ccd6f6;
+            font-size: 24px;
+            margin: 0 15px;
+            transition: color 0.3s ease;
+        }
+        
+        .social-links a:hover {
+            color: #64ffda;
+        }
+        
+        .copyright {
+            color: #8892b0;
+            font-size: 14px;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .page-hero h1 {
+                font-size: 40px;
+            }
+            
+            .projects-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .project-tabs {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .nav-links {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Particles Background -->
+    <div id="particles-js"></div>
+    
+    <!-- Header -->
+    <header>
+        <div class="container">
+            <nav>
+                <div class="logo">John Doe</div>
+                <ul class="nav-links">
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="projects.html" class="active">Projects</a></li>
+                    <li><a href="#contact">Contact</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+    
+    <!-- Hero Section -->
+    <section class="page-hero">
+        <div class="container">
+            <h1>My Projects</h1>
+            <p>Here's a collection of my completed work and projects currently in development. Each project represents a unique challenge and learning opportunity.</p>
+        </div>
+    </section>
+    
+    <!-- Project Tabs -->
+    <div class="container">
+        <div class="project-tabs">
+            <button class="tab-btn active" data-tab="completed">Completed Projects</button>
+            <button class="tab-btn" data-tab="ongoing">Ongoing Projects</button>
+        </div>
+    </div>
+    
+    <!-- Completed Projects -->
+    <div id="completed-projects" class="projects-container active">
+        <div class="container">
+            <div class="projects-grid">
+                <!-- Project 1 -->
+                <div class="project-card">
+                    <div class="project-card-inner">
+                        <div class="project-card-front">
+                            <div class="project-img">E-Commerce</div>
+                            <span class="status-badge status-complete">Completed</span>
+                            <div class="project-content">
+                                <h3 class="project-title">Modern E-Commerce Platform</h3>
+                                <p class="project-desc">A fully functional e-commerce website with product filtering, cart functionality, and payment processing.</p>
+                                <div class="project-tech">
+                                    <span>React</span>
+                                    <span>Node.js</span>
+                                    <span>MongoDB</span>
+                                    <span>Stripe</span>
+                                </div>
+                                <div class="project-links">
+                                    <a href="#"><i class="fab fa-github"></i></a>
+                                    <a href="#"><i class="fas fa-external-link-alt"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="project-card-back">
+                            <h3 class="project-title">Project Details</h3>
+                            <p class="project-details">This e-commerce platform features user authentication, product reviews, admin dashboard, and order tracking system. It processes payments securely using Stripe API.</p>
+                            <ul class="feature-list">
+                                <li>Responsive design for all devices</li>
+                                <li>Product search and filtering</li>
+                                <li>User rating and review system</li>
+                                <li>Order history and tracking</li>
+                            </ul>
+                            <div class="project-links">
+                                <a href="#"><i class="fab fa-github"></i></a>
+                                <a href="#"><i class="fas fa-external-link-alt"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Project 2 -->
+                <div class="project-card">
+                    <div class="project-card-inner">
+                        <div class="project-card-front">
+                            <div class="project-img">Task App</div>
+                            <span class="status-badge status-complete">Completed</span>
+                            <div class="project-content">
+                                <h3 class="project-title">Task Management App</h3>
+                                <p class="project-desc">A task management application with drag-and-drop functionality, user authentication, and real-time updates.</p>
+                                <div class="project-tech">
+                                    <span>Vue.js</span>
+                                    <span>Firebase</span>
+                                    <span>CSS3</span>
+                                </div>
+                                <div class="project-links">
+                                    <a href="#"><i class="fab fa-github"></i></a>
+                                    <a href="#"><i class="fas fa-external-link-alt"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="project-card-back">
+                            <h3 class="project-title">Project Details</h3>
+                            <p class="project-details">A Kanban-style task management application with real-time synchronization across devices. Users can create boards, lists, and cards to organize their tasks.</p>
+                            <ul class="feature-list">
+                                <li>Drag and drop interface</li>
+                                <li>Real-time updates with Firebase</li>
+                                <li>User authentication</li>
+                                <li>Task categories and labels</li>
+                            </ul>
+                            <div class="project-links">
+                                <a href="#"><i class="fab fa-github"></i></a>
+                                <a href="#"><i class="fas fa-external-link-alt"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Project 3 -->
+                <div class="project-card">
+                    <div class="project-card-inner">
+                        <div class="project-card-front">
+                            <div class="project-img">Weather App</div>
+                            <span class="status-badge status-complete">Completed</span>
+                            <div class="project-content">
+                                <h3 class="project-title">Weather Dashboard</h3>
+                                <p class="project-desc">A weather dashboard that displays current and forecasted weather for multiple cities using a weather API.</p>
+                                <div class="project-tech">
+                                    <span>JavaScript</span>
+                                    <span>REST API</span>
+                                    <span>Chart.js</span>
+                                </div>
+                                <div class="project-links">
+                                    <a href="#"><i class="fab fa-github"></i></a>
+                                    <a href="#"><i class="fas fa-external-link-alt"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="project-card-back">
+                            <h3 class="project-title">Project Details</h3>
+                            <p class="project-details">This weather application provides detailed weather information including temperature, humidity, wind speed, and 5-day forecasts. It uses the OpenWeatherMap API to fetch data.</p>
+                            <ul class="feature-list">
+                                <li>Search weather by city name</li>
+                                <li>5-day forecast with charts</li>
+                                <li>Temperature unit toggle</li>
+                                <li>Recent search history</li>
+                            </ul>
+                            <div class="project-links">
+                                <a href="#"><i class="fab fa-github"></i></a>
+                                <a href="#"><i class="fas fa-external-link-alt"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Ongoing Projects -->
+    <div id="ongoing-projects" class="projects-container">
+        <div class="container">
+            <div class="projects-grid">
+                <!-- Project 1 -->
+                <div class="project-card">
+                    <div class="project-card-inner">
+                        <div class="project-card-front">
+                            <div class="project-img">AI Assistant</div>
+                            <span class="status-badge status-ongoing">In Progress</span>
+                            <div class="project-content">
+                                <h3 class="project-title">AI Personal Assistant</h3>
+                                <p class="project-desc">An intelligent personal assistant that can schedule tasks, answer questions, and automate daily routines.</p>
+                                <div class="project-tech">
+                                    <span>Python</span>
+                                    <span>TensorFlow</span>
+                                    <span>React Native</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 65%"></div>
+                                </div>
+                                <div class="progress-text">65% Complete</div>
+                            </div>
+                        </div>
+                        <div class="project-card-back">
+                            <h3 class="project-title">Project Progress</h3>
+                            <p class="project-details">This AI assistant uses natural language processing to understand user commands. Current focus is on improving the speech recognition accuracy and expanding its capabilities.</p>
+                            <ul class="feature-list">
+                                <li>Voice command recognition</li>
+                                <li>Calendar integration</li>
+                                <li>Smart home device control</li>
+                                <li>Personalized recommendations</li>
+                            </ul>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 65%"></div>
+                            </div>
+                            <div class="progress-text">65% Complete</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Project 2 -->
+                <div class="project-card">
+                    <div class="project-card-inner">
+                        <div class="project-card-front">
+                            <div class="project-img">Fitness App</div>
+                            <span class="status-badge status-ongoing">In Progress</span>
+                            <div class="project-content">
+                                <h3 class="project-title">Fitness Tracker App</h3>
+                                <p class="project-desc">A comprehensive fitness application that tracks workouts, nutrition, and provides personalized training plans.</p>
+                                <div class="project-tech">
+                                    <span>React Native</span>
+                                    <span>GraphQL</span>
+                                    <span>Node.js</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 40%"></div>
+                                </div>
+                                <div class="progress-text">40% Complete</div>
+                            </div>
+                        </div>
+                        <div class="project-card-back">
+                            <h3 class="project-title">Project Progress</h3>
+                            <p class="project-details">This fitness app will include workout planning, progress tracking, social features, and integration with wearable devices. Currently working on the workout planning module.</p>
+                            <ul class="feature-list">
+                                <li>Custom workout plans</li>
+                                <li>Progress tracking with charts</li>
+                                <li>Social challenges and competitions</li>
+                                <li>Wearable device integration</li>
+                            </ul>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 40%"></div>
+                            </div>
+                            <div class="progress-text">40% Complete</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Project 3 -->
+                <div class="project-card">
+                    <div class="project-card-inner">
+                        <div class="project-card-front">
+                            <div class="project-img">AR Experience</div>
+                            <span class="status-badge status-ongoing">In Progress</span>
+                            <div class="project-content">
+                                <h3 class="project-title">Augmented Reality Museum</h3>
+                                <p class="project-desc">An AR application that brings museum exhibits to life with interactive digital overlays and information.</p>
+                                <div class="project-tech">
+                                    <span>Unity</span>
+                                    <span>ARCore</span>
+                                    <span>Blender</span>
+                                </div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: 25%"></div>
+                                </div>
+                                <div class="progress-text">25% Complete</div>
+                            </div>
+                        </div>
+                        <div class="project-card-back">
+                            <h3 class="project-title">Project Progress</h3>
+                            <p class="project-details">This AR experience will allow museum visitors to view additional information, 3D models, and interactive elements when pointing their devices at exhibits. Currently in early development phase.</p>
+                            <ul class="feature-list">
+                                <li>3D model viewing</li>
+                                <li>Interactive historical recreations</li>
+                                <li>Multi-language support</li>
+                                <li>Accessibility features</li>
+                            </ul>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 25%"></div>
+                            </div>
+                            <div class="progress-text">25% Complete</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="social-links">
+                <a href="#"><i class="fab fa-github"></i></a>
+                <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                <a href="#"><i class="fab fa-twitter"></i></a>
+                <a href="#"><i class="fab fa-instagram"></i></a>
+            </div>
+            <p class="copyright">© 2023 John Doe. All rights reserved.</p>
+        </div>
+    </footer>
+    
+    <!-- Particles.js Script -->
+    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
+    <script>
+        // Initialize particles.js with multi-color particles
+        particlesJS('particles-js', {
+            particles: {
+                number: {
+                    value: 100,
+                    density: {
+                        enable: true,
+                        value_area: 800
+                    }
+                },
+                color: {
+                    value: ['#64ffda', '#ff6b6b', '#4ecdc4', '#ffd166', '#6b48ff']
+                },
+                shape: {
+                    type: 'circle',
+                    stroke: {
+                        width: 0,
+                        color: '#000000'
+                    }
+                },
+                opacity: {
+                    value: 0.7,
+                    random: true,
+                    anim: {
+                        enable: true,
+                        speed: 1,
+                        opacity_min: 0.1,
+                        sync: false
+                    }
+                },
+                size: {
+                    value: 4,
+                    random: true,
+                    anim: {
+                        enable: true,
+                        speed: 2,
+                        size_min: 0.1,
+                        sync: false
+                    }
+                },
+                line_linked: {
+                    enable: true,
+                    distance: 150,
+                    color: '#64ffda',
+                    opacity: 0.4,
+                    width: 1
+                },
+                move: {
+                    enable: true,
+                    speed: 3,
+                    direction: 'none',
+                    random: true,
+                    straight: false,
+                    out_mode: 'out',
+                    bounce: false,
+                    attract: {
+                        enable: true,
+                        rotateX: 600,
+                        rotateY: 1200
+                    }
+                }
+            },
+            interactivity: {
+                detect_on: 'window',
+                events: {
+                    onhover: {
+                        enable: true,
+                        mode: 'grab'
+                    },
+                    onclick: {
+                        enable: true,
+                        mode: 'push'
+                    },
+                    resize: true
+                },
+                modes: {
+                    grab: {
+                        distance: 180,
+                        line_linked: {
+                            opacity: 1
+                        }
+                    },
+                    push: {
+                        particles_nb: 4
+                    },
+                    repulse: {
+                        distance: 100,
+                        duration: 0.4
+                    }
+                }
+            },
+            retina_detect: true
+        });
+        
+        // Header scroll effect
+        window.addEventListener('scroll', function() {
+            const header = document.querySelector('header');
+            if (window.scrollY > 50) {
+                header.classList.add('scrolled');
+            } else {
+                header.classList.remove('scrolled');
+            }
+        });
+        
+        // Tab functionality
+        const tabButtons = document.querySelectorAll('.tab-btn');
+        const projectContainers = document.querySelectorAll('.projects-container');
+        
+        tabButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const tabId = button.getAttribute('data-tab');
+                
+                // Update active tab
+                tabButtons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                
+                // Show active container
+                projectContainers.forEach(container => {
+                    container.classList.remove('active');
+                    if (container.id === `${tabId}-projects`) {
+                        container.classList.add('active');
+                    }
+                });
+            });
+        });
+        
+        // Animate progress bars when they come into view
+        const progressBars = document.querySelectorAll('.progress-fill');
+        
+        function animateProgressBars() {
+            progressBars.forEach(bar => {
+                const rect = bar.getBoundingClientRect();
+                if (rect.top < window.innerHeight - 100) {
+                    bar.style.width = bar.parentElement.getAttribute('data-width') || '0%';
+                }
+            });
+        }
+        
+        // Set initial width for animation
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.progress-fill').forEach(bar => {
+                const width = bar.style.width;
+                bar.style.width = '0';
+                bar.parentElement.setAttribute('data-width', width);
+            });
+            
+            window.addEventListener('scroll', animateProgressBars);
+            animateProgressBars(); // Initial check
+        });
+        
+        // Add hover effect to project cards
+        const projectCards = document.querySelectorAll('.project-card');
+        
+        projectCards.forEach(card => {
+            card.addEventListener('mouseenter', () => {
+                card.style.transform = 'translateY(-10px)';
+            });
+            
+            card.addEventListener('mouseleave', () => {
+                card.style.transform = 'translateY(0)';
+            });
+        });
+    </script>
+</body>
+</html>
